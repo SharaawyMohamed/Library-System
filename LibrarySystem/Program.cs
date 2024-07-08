@@ -1,10 +1,13 @@
-﻿namespace LibrarySystem
+﻿using LibrarySystem.Models;
+
+namespace LibrarySystem
 {
 	internal class Program
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello, World!");
+			Library obj = new Library();
+			obj.Begin();
 		}
 	}
 }
