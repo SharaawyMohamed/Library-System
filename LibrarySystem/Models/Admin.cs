@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibrarySystem.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +8,54 @@ using System.Transactions;
 
 namespace LibrarySystem.Models
 {
-	internal class Admin : BaseEntity
+	public class Admin : BaseEntity
 	{
 
-		public static void Add_book()
+		public static void AdminFunctionality(char type)
+		{
+			string username = default;
+			if (type == '1')
+			{
+				username = Auth.Login();
+			}
+			else 
+			{
+				username = Auth.SignUp();
+			}
+			
+			Library.Welcome(username);
+			AdminProcess(username);
+		}
+		private static void AdminProcess(string username)
+		{
+			char ch = GetMenue();
+			if (ch == '1')
+			{
+				Utility.ViewProfile(username);
+			}
+			else if (ch == '2')
+			{
+				Add_book();
+			}
+			else
+			{
+				Auth.LogOut();
+			}
+			AdminProcess(username);
+		}
+		private static char GetMenue()
+		{
+			char c;
+			do
+			{
+				Console.WriteLine("1) For View Profile \n" +
+				"2) For Adding Book \n" +
+				"3) For Log Out");
+				c = char.Parse(Console.ReadLine());
+			} while (c < '1' || c > '3');
+			return c;
+		}
+		private static void Add_book()
 		{
 			Book book = new Book();
 

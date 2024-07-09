@@ -8,22 +8,39 @@ using System.Xml.Linq;
 
 namespace LibrarySystem.Models
 {
-	internal class Library
+	public static class Library
 	{
-		public static List<Book> Books = new List<Book>();
-		public static List<User> Users = new List<User>();
-		Admin admin;
-		public Library()
-		{
-			admin = new Admin()
+		internal static List<Book> Books = new List<Book>();
+		internal static List<Session> Sessions = new List<Session>(){new Session()
 			{
-				Name = "Sharawy Mohamed",
-				Email = "sharawym275@gmail.com",
-				UserName = "Sharawy_Ad",
-				Password = "Pa$$w0rd"
-			};
-		}
-		public void Begin()
+			  BookName="NutShell",
+			  Topic="C# & .Net",
+			  NumberOfPages=5,
+			  CurrentPage=1,
+			  Username="SH"
+
+			}};
+		internal static List<User> Users = new List<User>()
+		{
+			new User()
+			{
+				Name="Sharawy",
+				Email="sharawy@gmail.com",
+				UserName="SH",
+				Password="Pa$$w0rd",
+				IsAdmin=false,
+			},
+			new User()
+			{
+				Name="Ammar",
+				Email="Ammar@gmail.com",
+				UserName="AM",
+				Password="Pa$$w0rd",
+				IsAdmin=false
+			}
+		};
+
+		internal static void Begin()
 		{
 
 
@@ -32,90 +49,38 @@ namespace LibrarySystem.Models
 			do
 			{
 				Console.WriteLine($"Welcome in our Library : \n" +
-				$"1) For Log In \n" +
-				$"2) For Sign Up\n" +
-				$"3) For Continue as Admin\n");
+				$"1) For Continue as Admin\n" +
+				$"2) For Continue As User\n");
 				type = char.Parse(Console.ReadLine());
 
-			} while (type != '1' && type != '2' && type != '3');
+			} while (!(type == '1' || type == '2'));
 			#endregion
 
 			//  Supposed Log in of register done
-			if (type == '3')
+			if (type == '1')
 			{
-				Console.WriteLine("Enter Your UserName : ");
-				string username = Console.ReadLine();
-				if (username != admin.UserName)
-				{
-					Console.WriteLine("InCorrect UserName Try Again!\n-------------------------------- ");
-					Begin();
-				}
-				Console.WriteLine("Click (1) To Add Book : \n" +
-					"Click (2) To Log Out : ");
-				char ch = char.Parse(Console.ReadLine());
-				if (ch == '1')
-				{
-					Admin.Add_book();
-				}
-				else
-				{
-					// Log out
-				}
-			}
-			else if (type == '1')
-			{
-				Console.WriteLine("Enter Your UserName : ");
-				string username = Console.ReadLine();
-				if (Users.Any(u => u.UserName == username))
-				{
-					// User Services
-				}
-				else
-				{
-					Console.WriteLine("InCorrect UserName Try Again!\n----------------------------------- ");
-					Begin();
-				}
-			}
-			else if (type == '2')
-			{
-				SignUpForUser();
-			}
+				Admin.AdminFunctionality(Registration());
 
+			}
+			else
+			{
+				User.UserFunctionality(Registration());
+			}
 		}
-		private void SignUpForUser()
+		internal static void Welcome(string username)
 		{
-			User user=new User();
+			Console.WriteLine($"Hello {username}");
+		}
+		private static char Registration()
+		{
+			char c;
 			do
 			{
-                Console.WriteLine("Try to enter your name: ");
-                user.Name = Console.ReadLine();
-			} while (string.IsNullOrEmpty(user.Name));
-
-			do
-			{
-				Console.WriteLine("Try to enter your Email: ");
-				user.Email = Console.ReadLine();
-			} while (string.IsNullOrEmpty(user.Email));
-
-			do
-			{
-                Console.WriteLine("Try to enter your username: ");
-                user.UserName = Console.ReadLine();
-				if (Users.Any(username => username.UserName == user.UserName))
-				{
-                    Console.WriteLine("InValid UserName: ");
-					continue;
-                }
-
-			} while (string.IsNullOrEmpty(user.UserName));
-
-			do
-			{
-				Console.WriteLine("Try to enter your password: ");
-				user.Password = Console.ReadLine();
-			} while (string.IsNullOrEmpty(user.Password));
-
-			Users.Add(user);
+				Console.WriteLine($"1) For Log In\n" +
+					$"2) For Sign Up");
+				c = char.Parse(Console.ReadLine());
+			} while (!(c == '1' || c == '2'));
+			return c;
 		}
 	}
 }

@@ -6,8 +6,7 @@ namespace LibrarySystem
 	{
 		static void Main(string[] args)
 		{
-			Library obj = new Library();
-			obj.Begin();
+			Library.Begin();
 		}
 	}
 }
