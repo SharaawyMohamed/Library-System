@@ -13,7 +13,7 @@ namespace LibrarySystem.Models
 		internal static List<Book> Books = new List<Book>();
 		internal static List<Session> Sessions = new List<Session>(){new Session()
 			{
-			  BookName="NutShell",
+			  Name="NutShell",
 			  Topic="C# & .Net",
 			  NumberOfPages=5,
 			  CurrentPage=1,
@@ -36,7 +36,8 @@ namespace LibrarySystem.Models
 				Email="Ammar@gmail.com",
 				UserName="AM",
 				Password="Pa$$w0rd",
-				IsAdmin=false
+				IsAdmin=true,
+				IsSuper=true
 			}
 		};
 
@@ -59,27 +60,31 @@ namespace LibrarySystem.Models
 			//  Supposed Log in of register done
 			if (type == '1')
 			{
-				Admin.AdminFunctionality(Registration());
+				Admin admin = new Admin();
+				admin.AdminFunctionality(Registration(1));
 
 			}
 			else
 			{
-				User.UserFunctionality(Registration());
+				User user = new User();
+				user.UserFunctionality(Registration());
 			}
 		}
 		internal static void Welcome(string username)
 		{
 			Console.WriteLine($"Hello {username}");
 		}
-		private static char Registration()
+		private static char Registration(int type = 2)
 		{
 			char c;
 			do
 			{
-				Console.WriteLine($"1) For Log In\n" +
-					$"2) For Sign Up");
+
+				Console.WriteLine($"1) For Log In");
+				if (type == 2)
+					Console.WriteLine("2) For Sign Up");
 				c = char.Parse(Console.ReadLine());
-			} while (!(c == '1' || c == '2'));
+			} while (!((c=='1')|| (c=='2' && type==2)));
 			return c;
 		}
 	}

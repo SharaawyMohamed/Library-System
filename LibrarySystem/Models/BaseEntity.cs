@@ -13,6 +13,6 @@ namespace LibrarySystem.Models
 		public string Password { get; set; } = string.Empty;
 		public string Email { get; set; } = string.Empty;
 		public bool IsAdmin { get; set; } = false;
-		
+		public bool IsSuper { get; set; }=false;
 	}
 }

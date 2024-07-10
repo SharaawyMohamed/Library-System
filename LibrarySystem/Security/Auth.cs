@@ -50,7 +50,7 @@ namespace LibrarySystem.Security
 				do
 				{
 					Console.WriteLine("User Name Or Email Should Be Unique \n" +
-						"1 ) For Suign Up Again \n" +
+						"1 ) For Sign Up Again \n" +
 						"2 ) For Got To The Main Page");
 					stat = int.Parse(Console.ReadLine());
 				} while (stat < 1 || stat > 2);
@@ -66,13 +66,14 @@ namespace LibrarySystem.Security
 			Library.Users.Add(user);
 			return user.UserName;
 		}
-		public static string Login()
+		public static string Login(int t=1)
 		{
 			string userName;
 			string password;
 			do
 			{
-				Console.WriteLine("Try to enter your username: ");
+                Console.WriteLine("-------------------------- Log In --------------------------------");
+                Console.WriteLine("Try to enter your username: ");
 				userName = Console.ReadLine();
 
 			} while (string.IsNullOrEmpty(userName));
@@ -83,7 +84,15 @@ namespace LibrarySystem.Security
 				password = Console.ReadLine();
 			} while (string.IsNullOrEmpty(password));
 
-			var user = Library.Users.FirstOrDefault(u => u.UserName == userName && u.Password == password);
+			User user;
+			if (t == 1)
+			{
+				user=(Library.Users.FirstOrDefault(u => u.UserName == userName && u.Password == password))!;
+			}
+			else
+			{
+				user=(Library.Users.FirstOrDefault(u => u.UserName == userName && u.Password == password&& u.IsAdmin==true))!;
+			}
 			if (user is null)
 			{
 				int stat;

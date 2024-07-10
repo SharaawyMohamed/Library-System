@@ -10,25 +10,17 @@ namespace LibrarySystem.Models
 {
 	public class Admin : BaseEntity
 	{
-
-		public static void AdminFunctionality(char type)
+		private string username = string.Empty;
+		public void AdminFunctionality(char type)
 		{
-			string username = default;
-			if (type == '1')
-			{
-				username = Auth.Login();
-			}
-			else 
-			{
-				username = Auth.SignUp();
-			}
-			
+			username = Auth.Login(2);
 			Library.Welcome(username);
-			AdminProcess(username);
+			AdminProcess();
 		}
-		private static void AdminProcess(string username)
+		private void AdminProcess()
 		{
-			char ch = GetMenue();
+			bool isSuper = Library.Users.Any(u => u.UserName == username && u.IsSuper == true);
+			char ch = GetMenu(isSuper);
 			if (ch == '1')
 			{
 				Utility.ViewProfile(username);
@@ -37,25 +29,40 @@ namespace LibrarySystem.Models
 			{
 				Add_book();
 			}
-			else
+			else if (ch == '3')
 			{
+
 				Auth.LogOut();
 			}
-			AdminProcess(username);
+			else
+			{
+				AddAdmin();
+			}
+			AdminProcess();
 		}
-		private static char GetMenue()
+		private char GetMenu(bool isSuper)
 		{
 			char c;
 			do
 			{
-				Console.WriteLine("1) For View Profile \n" +
-				"2) For Adding Book \n" +
-				"3) For Log Out");
+				if (isSuper)
+				{
+					Console.WriteLine("1) For View Profile \n" +
+									  "2) For Adding Book \n" +
+									  "3) For Log Out\n" +
+									  "4) For Adding Admin");
+				}
+				else
+				{
+					Console.WriteLine("1) For View Profile \n" +
+									  "2) For Adding Book \n" +
+									  "3) For Log Out");
+				}
 				c = char.Parse(Console.ReadLine());
-			} while (c < '1' || c > '3');
+			} while (c < '1' || c > '4');
 			return c;
 		}
-		private static void Add_book()
+		private void Add_book()
 		{
 			Book book = new Book();
 
@@ -71,6 +78,16 @@ namespace LibrarySystem.Models
 				book.Name = Console.ReadLine();
 			} while (string.IsNullOrEmpty(book.Name));
 
+			do
+			{
+				Console.WriteLine("Enter Book's Topic :");
+				book.Topic = Console.ReadLine();
+			} while (string.IsNullOrEmpty(book.Topic));
+			do
+			{
+				Console.WriteLine("Enter Number Of Pages :");
+				book.NumberOfPages = int.Parse(Console.ReadLine());
+			} while (book.NumberOfPages<1);
 			int NumberOfAuthors;
 			do
 			{
@@ -88,7 +105,74 @@ namespace LibrarySystem.Models
 				} while (string.IsNullOrEmpty(author));
 				book.Authors.Add(author);
 			}
-			Library.Books.Add(book);
+			var index = Library.Books.FindIndex(b=>b.Name==book.Name);
+			if (index == -1)
+			{
+				Library.Books.Add(book);
+			}
+			else
+			{
+				Library.Books[index].Quantity++;
+			}
+		}
+		private void AddAdmin()
+		{
+			User user = new User();
+			do
+			{
+				Console.WriteLine("Try to enter Admin name: ");
+				user.Name = Console.ReadLine();
+			} while (string.IsNullOrEmpty(user.Name));
+
+			do
+			{
+				Console.WriteLine("Try to enter Admin Email: ");
+				user.Email = Console.ReadLine();
+			} while (string.IsNullOrEmpty(user.Email));
+
+			do
+			{
+				Console.WriteLine("Try to enter Admin username: ");
+				user.UserName = Console.ReadLine();
+				if (Library.Users.Any(username => username.UserName == user.UserName))
+				{
+					Console.WriteLine("InValid UserName: ");
+					continue;
+				}
+
+			} while (string.IsNullOrEmpty(user.UserName));
+
+			do
+			{
+				Console.WriteLine("Try to enter Admin password: ");
+				user.Password = Console.ReadLine();
+
+			} while (string.IsNullOrEmpty(user.Password));
+
+			var isfound = Library.Users.FirstOrDefault(u => u.UserName == user.UserName || u.Email == user.Email);
+			if (isfound is not null)
+			{
+				int stat;
+				do
+				{
+					Console.WriteLine("User Name Or Email Should Be Unique \n" +
+						"1 ) Try Again \n" +
+						"2 ) For Got To The Main Page");
+					stat = int.Parse(Console.ReadLine());
+				} while (stat < 1 || stat > 2);
+				if (stat == 1)
+				{
+					AddAdmin();
+				}
+				else
+				{
+					Library.Begin();
+				}
+			}
+			user.IsAdmin = true;
+			Library.Users.Add(user);
+			Console.WriteLine("             Admin Added Successfully            ");
+
 		}
 	}
 }
