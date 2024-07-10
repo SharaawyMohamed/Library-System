@@ -9,6 +9,7 @@ This project is a simple online book reader system implemented in C#. The system
 ## User Roles
 
 1. **Super Admin User:**
+   
    -Log in
    - Show admin profile
    - Can add books to the system.
@@ -16,12 +17,14 @@ This project is a simple online book reader system implemented in C#. The system
    - Log out
 
 3. **Admin User:**
+
    -Log in.
    - Show admin profile
    - Can add books to the system.
    - Log out.
      
 5. **Customer User:**
+
    -Log in
    - Show user profile
    - Can read one book at a time(can flip pages in book next,previous).
